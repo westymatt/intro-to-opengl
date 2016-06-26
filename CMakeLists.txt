@@ -8,6 +8,7 @@ set(INTRO_TO_OPENGL_SRCS
   ${PROJECT_SOURCE_DIR}/main.cpp
   ${PROJECT_SOURCE_DIR}/display.cpp
   ${PROJECT_SOURCE_DIR}/shader.cpp
+  ${PROJECT_SOURCE_DIR}/mesh.cpp
 )
 
 find_package(SDL2 REQUIRED)
