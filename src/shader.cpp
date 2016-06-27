@@ -19,6 +19,7 @@ Shader::Shader(const std::string &filename) {
   }
 
   glBindAttribLocation(this->m_program, 0, "position");
+  glBindAttribLocation(this->m_program, 1, "textCoord");
 
   glLinkProgram(this->m_program);
   checkShaderError(this->m_program, GL_LINK_STATUS, true,
@@ -26,6 +27,9 @@ Shader::Shader(const std::string &filename) {
   glValidateProgram(this->m_program);
   checkShaderError(this->m_program, GL_VALIDATE_STATUS, true,
                    "Error program is invalid");
+
+  this->m_uniforms[TRANSFORM_U] =
+      glGetUniformLocation(this->m_program, "transform");
 }
 
 Shader::~Shader() {
@@ -55,6 +59,11 @@ static std::string loadShader(const std::string &filename) {
 }
 
 void Shader::bind() { glUseProgram(this->m_program); }
+
+void Shader::update(const Transform &transform) {
+  glm::mat4 model = transform.getModel();
+  glUniformMatrix4fv(this->m_uniforms[TRANSFORM_U], 1, GL_FALSE, &model[0][0]);
+}
 
 static void checkShaderError(GLuint shader, GLuint flag, bool isProgram,
                              const std::string &errorMessage) {
