@@ -1,6 +1,7 @@
 #ifndef SHADER_H
 #define SHADER_H
 
+#include "camera.h"
 #include "transform.h"
 #include <GL/glew.h>
 #include <string>
@@ -9,7 +10,7 @@ class Shader {
 public:
   Shader(const std::string &filename);
   void bind();
-  void update(const Transform &transform);
+  void update(const Transform &transform, const Camera &camera);
   virtual ~Shader();
 
 protected:

@@ -1,3 +1,4 @@
+#include "camera.h"
 #include "display.h"
 #include "mesh.h"
 #include "shader.h"
@@ -7,8 +8,11 @@
 
 #include <iostream>
 
+#define WIDTH 800
+#define HEIGHT 600
+
 int main() {
-  Display display(800, 600, "Hello World");
+  Display display(WIDTH, HEIGHT, "Hello World");
 
   Shader shader("./res/basicShader");
 
@@ -16,9 +20,15 @@ int main() {
                        Vertex(glm::vec3(0.0, 0.5, 0.0), glm::vec2(0.5, 1.0)),
                        Vertex(glm::vec3(0.5, -0.5, 0.0), glm::vec2(1.0, 0))};
 
-  Mesh mesh(vertices, sizeof(vertices) / sizeof(vertices[0]));
+  unsigned int indices[] = {0, 1, 2};
+
+  Mesh mesh(vertices, sizeof(vertices) / sizeof(vertices[0]), indices,
+            sizeof(indices) / sizeof(indices[0]));
+  Mesh mesh2("./res/monkey3.obj");
   Texture texture("./res/bricks.jpg");
   Transform transform;
+  Camera camera(glm::vec3(0, 0, -3), 70.0f, (float)WIDTH / (float)HEIGHT, 0.01f,
+                1000.0f);
 
   float counter = 0.0f;
   while (!display.isClosed()) {
@@ -28,16 +38,20 @@ int main() {
     float cosCounter = cosf(counter);
 
     transform.getPos().x = sinCounter;
-    transform.getRot().z = counter * 50;
-    transform.setScale(glm::vec3(cosCounter, cosCounter, cosCounter));
+    transform.getPos().z = cosCounter;
+    transform.getRot().z = counter * 1;
+    transform.getRot().y = counter * 1;
+    transform.getRot().x = counter * 1;
+    // transform.setScale(glm::vec3(cosCounter, cosCounter, cosCounter));
 
     shader.bind();
-    shader.update(transform);
+    shader.update(transform, camera);
     texture.bind(0);
-    mesh.draw();
+    // mesh.draw();
+    mesh2.draw();
 
     display.update();
-    counter += 0.01f;
+    counter += 0.0099999f;
   }
 
   return 0;
